@@ -5,26 +5,73 @@ const onClickAdd = () => {
   const inputText = document.getElementById("add-text").value;
   document.getElementById("add-text").value = "";
 
+  // 未完了リストに要素生成
+  createIncompleteList(inputText);
+};
+
+// 未完了リストから指定の要素を削除
+const deleteFromIncompleteList = (taget) => {
+  document.getElementById("incomplete-list").removeChild(taget);
+};
+
+// 未完了リストに要素生成
+const createIncompleteList = (text) => {
   // div生成
   const div = document.createElement("div");
   div.className = "list-row";
 
   // li生成
   const li = document.createElement("li");
-  li.innerText = inputText;
+  li.innerText = text;
 
   // button（完了）生成
   const completeButton = document.createElement("button");
   completeButton.innerText = "完了";
   completeButton.addEventListener("click", () => {
-    alert("完了");
+    // 押された完了ボタンの親(div)を未完了リストから削除
+    deleteFromIncompleteList(completeButton.parentNode);
+
+    // 完了リストに追加する要素
+    const addTaget = completeButton.parentNode;
+
+    // TODO内容テキストを取得
+    const text = addTaget.firstElementChild.innerHTML;
+
+    // div以下を初期化
+    addTaget.textContent = null;
+
+    // li生成
+    const li = document.createElement("li");
+    li.innerText = text;
+
+    // button生成
+    const backButton = document.createElement("button");
+    backButton.innerText = "戻す";
+    backButton.addEventListener("click", () => {
+      // 押された戻すボタンの親(div)を完了リストから削除
+      const deleteTaeget = backButton.parentNode;
+      document.getElementById("complete-list").removeChild(deleteTaeget);
+
+      // テキスト取得
+      const text = backButton.parentNode.firstElementChild.innerText;
+      //未完了リストに要素生成
+      createIncompleteList(text);
+    });
+
+    // divの子要素に各要素を設定
+    addTaget.appendChild(li);
+    addTaget.appendChild(backButton);
+
+    // 完了リストに追加
+    document.getElementById("complete-list").appendChild(addTaget);
   });
 
   // button（削除）生成
   const deleteButton = document.createElement("button");
   deleteButton.innerText = "削除";
   deleteButton.addEventListener("click", () => {
-    alert("削除");
+    // 押された削除ボタンの親(div)を未完了リストから削除
+    deleteFromIncompleteList(deleteButton.parentNode);
   });
 
   // divの子要素に各要素を設定
